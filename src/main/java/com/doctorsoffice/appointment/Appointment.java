@@ -1,5 +1,6 @@
 package com.doctorsoffice.appointment;
 
+import com.doctorsoffice.doctor.Doctor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,14 +28,19 @@ public class Appointment {
     @NotNull
     private String prescription;
 
+    @ManyToOne
+    @JoinColumn(name = "DOCTOR_FK")
+    private Doctor doctor;
+
     public Appointment() {
     }
 
-    public Appointment(Long id, LocalDateTime date, String diagnosis, String prescription) {
+    public Appointment(Long id, LocalDateTime date, String diagnosis, String prescription, Doctor doctor) {
         this.id = id;
         this.date = date;
         this.diagnosis = diagnosis;
         this.prescription = prescription;
+        this.doctor = doctor;
     }
 
 }

@@ -24,7 +24,13 @@ public class AppointmentController {
     @PostMapping("/create")
     public AppointmentDto create(@RequestBody AppointmentDto appointmentDto) {
         final Appointment appointment = appointmentMapper.fromDto(appointmentDto);
-        appointmentService.create(appointment);
+
+        try{
+            appointmentService.create(appointment);
+        } catch(NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
         return appointmentMapper.toDto(appointment);
     }
 

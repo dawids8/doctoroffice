@@ -3,15 +3,15 @@ package com.doctorsoffice.doctor;
 import com.doctorsoffice.appointment.Appointment;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
 public class Doctor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DOCTOR_ID")
     private Long id;
 

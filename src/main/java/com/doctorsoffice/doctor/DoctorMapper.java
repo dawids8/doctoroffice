@@ -1,5 +1,8 @@
 package com.doctorsoffice.doctor;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DoctorMapper {
 
     public DoctorDto toDto(Doctor doctor) {

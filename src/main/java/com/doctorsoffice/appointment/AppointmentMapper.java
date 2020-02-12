@@ -1,33 +1,30 @@
 package com.doctorsoffice.appointment;
 
+import com.doctorsoffice.doctor.Doctor;
+import com.doctorsoffice.doctor.DoctorDto;
+import com.doctorsoffice.doctor.DoctorMapper;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AppointmentMapper {
 
+    private final DoctorMapper doctorMapper;
+
+    public AppointmentMapper(DoctorMapper doctorMapper) {
+        this.doctorMapper = doctorMapper;
+    }
+
     public AppointmentDto toDto(Appointment appointment) {
+        final DoctorDto doctorDto = doctorMapper.toDto(appointment.getDoctor());
+
         return new AppointmentDto(appointment.getId(), appointment.getDate(), appointment.getDiagnosis(),
-                appointment.getPrescription());
+                appointment.getPrescription(), doctorDto);
     }
 
     public Appointment fromDto(AppointmentDto appointmentDto) {
+        final Doctor doctor = doctorMapper.fromDto(appointmentDto.getDoctorDto());
+
         return new Appointment(appointmentDto.getId(), appointmentDto.getDate(), appointmentDto.getDiagnosis(),
-                appointmentDto.getPrescription());
+                appointmentDto.getPrescription(), doctor);
     }
 }
-
-
-
-
-
-/*
-    public UserDto toDto(User user) {
-        return new UserDto(user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(),
-                user.getDateOfBirth(), user.getEmail(), user.getPhoneNumber());
-    }
-
-    public User fromDto(UserDto userDto) {  // po co dajemy id skoro otrzymujemy od fronta
-        return new User(userDto.getId(), userDto.getUsername(), userDto.getPassword(), userDto.getFirstname(),
-                userDto.getLastname(), userDto.getDateOfBirth(), userDto.getEmail(), userDto.getPhoneNumber());
-    }
- */
