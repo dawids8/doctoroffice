@@ -1,8 +1,11 @@
 package com.doctorsoffice.patient;
 
+import com.doctorsoffice.appointment.Appointment;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,6 +22,9 @@ public class Patient {
     @Column(name = "LAST_NAME")
     private String lastname;
 
+    @Column(name = "PESEL")
+    private String pesel;
+
     @Column(name = "STREET")
     private String street;
 
@@ -34,13 +40,19 @@ public class Patient {
     @Column(name = "EMAIL")
     private String email;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> appointmentList;
+
     public Patient() {
     }
 
-    public Patient(String firstname, String lastname, String street, String city, String postCode,
+    public Patient(Long id, String firstname, String lastname, String pesel, String street, String city, String postCode,
                    String phoneNumber, String email) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.pesel = pesel;
         this.street = street;
         this.city = city;
         this.postCode = postCode;
