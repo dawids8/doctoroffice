@@ -13,8 +13,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void createUser(User user) {
-        // Walidacja
+    public void create(User user) {
         userRepository.save(user);
     }
 

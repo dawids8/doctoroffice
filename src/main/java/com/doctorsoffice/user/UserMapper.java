@@ -10,7 +10,7 @@ public class UserMapper {
                 user.getDateOfBirth(), user.getEmail(), user.getPhoneNumber());
     }
 
-    public User fromDto(UserDto userDto) {  // po co dajemy id skoro otrzymujemy od fronta
+    public User fromDto(UserDto userDto) {
         return new User(userDto.getId(), userDto.getUsername(), userDto.getPassword(), userDto.getFirstname(),
                 userDto.getLastname(), userDto.getDateOfBirth(), userDto.getEmail(), userDto.getPhoneNumber());
     }
