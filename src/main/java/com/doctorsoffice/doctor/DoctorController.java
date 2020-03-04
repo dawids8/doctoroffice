@@ -2,10 +2,7 @@ package com.doctorsoffice.doctor;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,6 +18,15 @@ public class DoctorController {
     public DoctorController(DoctorService doctorService, DoctorMapper doctorMapper) {
         this.doctorService = doctorService;
         this.doctorMapper = doctorMapper;
+    }
+
+    @PostMapping("/create")
+    public DoctorDto create(@RequestBody DoctorDto doctorDto) {
+        final Doctor doctor = doctorMapper.fromDto(doctorDto);
+
+        doctorService.create(doctor);
+
+        return doctorMapper.toDto(doctor);
     }
 
     @GetMapping("/get")

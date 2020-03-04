@@ -15,6 +15,10 @@ public class DoctorService {
         this.doctorRepository = doctorRepository;
     }
 
+    public void create(Doctor doctor) {
+        doctorRepository.save(doctor);
+    }
+
     @Transactional(readOnly = true)
     public Doctor get(Long id) {
         return doctorRepository.findById(id)
