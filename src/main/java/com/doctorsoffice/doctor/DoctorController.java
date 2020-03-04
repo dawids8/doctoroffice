@@ -15,8 +15,8 @@ import java.util.NoSuchElementException;
 @RequestMapping("/doctor")
 public class DoctorController {
 
-    private DoctorService doctorService;
-    private DoctorMapper doctorMapper;
+    private final DoctorService doctorService;
+    private final DoctorMapper doctorMapper;
 
     public DoctorController(DoctorService doctorService, DoctorMapper doctorMapper) {
         this.doctorService = doctorService;
@@ -27,7 +27,6 @@ public class DoctorController {
     public DoctorDto get(@RequestParam Long id) {
         try {
             final Doctor doctor = doctorService.get(id);
-            System.out.println(doctor);
             return doctorMapper.toDto(doctor);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

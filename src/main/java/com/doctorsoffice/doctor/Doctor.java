@@ -2,6 +2,7 @@ package com.doctorsoffice.doctor;
 
 import com.doctorsoffice.appointment.Appointment;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Doctor {
     @Column(name = "MEDICAL_SPECIALIZATION")
     private MedicalSpecialization medicalSpecialization;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointmentList;
 

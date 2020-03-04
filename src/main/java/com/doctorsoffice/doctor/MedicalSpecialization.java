@@ -1,6 +1,5 @@
 package com.doctorsoffice.doctor;
 
-// Dodać specjalizacje
 public enum MedicalSpecialization {
 
     CARDIOLOGIST,
@@ -9,5 +8,7 @@ public enum MedicalSpecialization {
     DERMATOLOGIST,
     OPHTHALMOLOGIST,
     PEDIATRICIAN
+
+    //sprawidz enuma na necie dla tabelki, zeby inta nie bylo
 
 }
