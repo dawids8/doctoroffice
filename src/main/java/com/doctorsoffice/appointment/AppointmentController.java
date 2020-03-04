@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -43,39 +44,21 @@ public class AppointmentController {
         }
     }
 
-    // Obsłużyc wyjątek jak w delete (appointmentService -> logika)
     @GetMapping("/get")
     public AppointmentDto get(@RequestParam Long id) {
-        final Appointment appointment = appointmentService.get(id)
-                .orElseThrow(() -> {
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no appointemnt with such id");
-                });
+        try {
+            final Appointment appointment = appointmentService.get(id);
+            final AppointmentDto appointmentDto = appointmentMapper.toDto(appointment);
+            System.out.println(appointment);
+            return appointmentDto;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
-        return appointmentMapper.toDto(appointment);
+    @GetMapping("/getAll")
+    public List<AppointmentDto> getAll() {
+        final List<Appointment> appointments = appointmentService.getAll();
+        return appointmentMapper.toDto(appointments);
     }
 }
-
-/*
-OPTIONALE
-
-public boolean optionalExample(Long appointmentId) {
-        Appointment appointment = appointmentService.get(appointmentId)
-                .orElseThrow(NoSuchElementException::new);
-
-        //tworzenie z obiektu, null spowoduje rzucenie wyjatku
-        Optional.of(new Appointment());
-
-        //tworzenie pustego optional
-        Optional.empty();
-
-        //tworzenie optional za pomoca obiektu lub null
-        Optional.ofNullable(null);
-        Optional.ofNullable(new Appointment());
-
-
-        final LocalDateTime now = LocalDateTime.now();
-        final LocalDateTime appointmentDate = appointment.getDate();
-
-        return appointmentDate.isBefore(now);
-    }
-*/

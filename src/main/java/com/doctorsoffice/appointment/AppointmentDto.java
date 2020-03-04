@@ -1,6 +1,7 @@
 package com.doctorsoffice.appointment;
 
 import com.doctorsoffice.doctor.DoctorDto;
+import com.doctorsoffice.patient.PatientDto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,15 +14,18 @@ public class AppointmentDto {
     private String diagnosis;
     private String prescription;
     private DoctorDto doctorDto;
+    private PatientDto patientDto;
 
     public AppointmentDto() {
     }
 
-    public AppointmentDto(Long id, LocalDateTime date, String diagnosis, String prescription, DoctorDto doctorDto) {
+    public AppointmentDto(Long id, LocalDateTime date, String diagnosis, String prescription, DoctorDto doctorDto,
+                          PatientDto patientDto) {
         this.id = id;
         this.date = date;
         this.diagnosis = diagnosis;
         this.prescription = prescription;
         this.doctorDto = doctorDto;
+        this.patientDto = patientDto;
     }
 }
