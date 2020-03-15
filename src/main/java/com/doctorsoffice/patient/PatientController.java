@@ -1,10 +1,8 @@
 package com.doctorsoffice.patient;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,6 +19,19 @@ public class PatientController {
     public PatientController(PatientMapper patientMapper, PatientService patientService) {
         this.patientMapper = patientMapper;
         this.patientService = patientService;
+    }
+
+    @PostMapping("/create")
+    public PatientDto create(@RequestBody PatientDto patientDto) {
+        try {
+            final Patient patient = patientMapper.fromDto(patientDto);
+
+            patientService.create(patient);
+
+            return patientMapper.toDto(patient);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
     @GetMapping("/get")

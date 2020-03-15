@@ -22,7 +22,7 @@ public class Patient {
     @Column(name = "LAST_NAME")
     private String lastname;
 
-    @Column(name = "PESEL")
+    @Column(name = "PESEL", unique = true)
     private String pesel;
 
     @Column(name = "STREET")
@@ -34,10 +34,10 @@ public class Patient {
     @Column(name = "POST_CODE")
     private String postCode;
 
-    @Column(name = "PHONE_NUMBER")
+    @Column(name = "PHONE_NUMBER", unique = true)
     private String phoneNumber;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", unique = true)
     private String email;
 
     @ToString.Exclude
