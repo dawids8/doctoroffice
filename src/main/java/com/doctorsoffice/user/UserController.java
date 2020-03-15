@@ -1,7 +1,10 @@
 package com.doctorsoffice.user;
 
 import lombok.Data;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Data
 @RestController
@@ -19,7 +22,13 @@ public class UserController {
     @PostMapping("/create")
     public UserDto createUser(@RequestBody UserDto userDto) {
         final User user = userMapper.fromDto(userDto);
-        userService.createUser(user);
+
+        try {
+            userService.create(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Dane nie są unikatowe!");
+        }
+
         return userMapper.toDto(user);
     }
 

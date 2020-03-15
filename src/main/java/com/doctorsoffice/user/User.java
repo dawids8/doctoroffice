@@ -35,11 +35,11 @@ public class User {
     @NotNull
     private LocalDate dateOfBirth;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", unique = true)
     @NotNull
     private String email;
 
-    @Column(name = "PHONE_NUMBER")
+    @Column(name = "PHONE_NUMBER", unique = true)
     @NotNull
     private String phoneNumber;
 
