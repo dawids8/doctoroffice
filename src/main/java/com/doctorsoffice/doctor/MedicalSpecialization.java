@@ -2,13 +2,25 @@ package com.doctorsoffice.doctor;
 
 public enum MedicalSpecialization {
 
+    ALLERGIST,
+    ANESTHESIOLOGIST,
     CARDIOLOGIST,
-    SURGEON,
-    ONCOLOGIST,
     DERMATOLOGIST,
+    ENDOCRINOLOGIST,
+    GASTROENTEROLOGIST,
+    NEUROLOGIST,
+    NEPGROLOGIST,
+    PULMONOLOGIST,
+    ONCOLOGIST,
     OPHTHALMOLOGIST,
-    PEDIATRICIAN
-
-    //sprawidz enuma na necie dla tabelki, zeby inta nie bylo
+    ORTHOPEDIST,
+    OTOLARYNGOLOGIST,
+    PEDIATRICIAN,
+    PODIATRIST,
+    PSYCHIATRIST,
+    RADIOLOGIST,
+    RHEUMATOLOGIST,
+    SURGEON,
+    UROLOGIST
 
 }
