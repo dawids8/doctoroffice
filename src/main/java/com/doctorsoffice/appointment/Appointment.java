@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
+@NamedEntityGraph(name = "Appointment.detail", attributeNodes = {@NamedAttributeNode("patient"),
+                                                                    @NamedAttributeNode("doctor")})
 @Data
 public class Appointment {
 
@@ -22,11 +24,9 @@ public class Appointment {
     private LocalDateTime date;
 
     @Column(name = "DIAGNOSIS")
-    @NotNull
     private String diagnosis;
 
     @Column(name = "PRESCRIPTION")
-    @NotNull
     private String prescription;
 
     @ManyToOne
@@ -37,15 +37,21 @@ public class Appointment {
     @JoinColumn(name = "PATIENT_FK")
     private Patient patient;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS")
+    private Status status;
+
     public Appointment() {
     }
 
-    public Appointment(Long id, LocalDateTime date, String diagnosis, String prescription, Doctor doctor, Patient patient) {
+    public Appointment(Long id, LocalDateTime date, String diagnosis, String prescription, Doctor doctor, Patient patient,
+                       Status status) {
         this.id = id;
         this.date = date;
         this.diagnosis = diagnosis;
         this.prescription = prescription;
         this.doctor = doctor;
         this.patient = patient;
+        this.status = status;
     }
 }

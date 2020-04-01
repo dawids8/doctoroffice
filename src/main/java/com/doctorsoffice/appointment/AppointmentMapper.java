@@ -27,7 +27,7 @@ public class AppointmentMapper {
         final PatientDto patientDto = patientMapper.toDto(appointment.getPatient());
 
         return new AppointmentDto(appointment.getId(), appointment.getDate(), appointment.getDiagnosis(),
-                appointment.getPrescription(), doctorDto, patientDto);
+                appointment.getPrescription(), doctorDto, patientDto, appointment.getStatus());
     }
 
     public List<AppointmentDto> toDto(List<Appointment> appointments) {
@@ -41,6 +41,6 @@ public class AppointmentMapper {
         final Patient patient = patientMapper.fromDto(appointmentDto.getPatientDto());
 
         return new Appointment(appointmentDto.getId(), appointmentDto.getDate(), appointmentDto.getDiagnosis(),
-                appointmentDto.getPrescription(), doctor, patient);
+                appointmentDto.getPrescription(), doctor, patient, appointmentDto.getStatus());
     }
 }
