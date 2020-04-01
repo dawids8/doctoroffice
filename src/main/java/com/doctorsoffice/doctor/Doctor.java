@@ -1,6 +1,7 @@
 package com.doctorsoffice.doctor;
 
 import com.doctorsoffice.appointment.Appointment;
+import com.doctorsoffice.schedule.Schedule;
 import lombok.Data;
 import lombok.ToString;
 
@@ -22,8 +23,16 @@ public class Doctor {
     @Column(name = "LAST_NAME")
     private String lastname;
 
+    @Column(name = "PESEL", unique = true)
+    private String pesel;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "MEDICAL_SPECIALIZATION")
     private MedicalSpecialization medicalSpecialization;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "doctor")
+    private Schedule schedule;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "doctor")
@@ -32,10 +41,11 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(Long id, String firstname, String lastname, MedicalSpecialization medicalSpecialization) {
+    public Doctor(Long id, String firstname, String lastname, String pesel, MedicalSpecialization medicalSpecialization) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.pesel = pesel;
         this.medicalSpecialization = medicalSpecialization;
     }
 }

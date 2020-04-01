@@ -1,5 +1,6 @@
 package com.doctorsoffice.doctor;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,14 @@ public class DoctorService {
         this.doctorRepository = doctorRepository;
     }
 
+    @Transactional
     public void create(Doctor doctor) {
+        final boolean isPeselInUse = doctorRepository.existsByPesel(doctor.getPesel());
+
+        if (isPeselInUse) {
+            throw new DataIntegrityViolationException("Pesel already in use.");
+        }
+
         doctorRepository.save(doctor);
     }
 
@@ -34,5 +42,4 @@ public class DoctorService {
     public List<Doctor> getDoctorsWithSpecifiedSpecialization(MedicalSpecialization medicalSpecialization) {
         return doctorRepository.findDoctorByMedicalSpecialization(medicalSpecialization);
     }
-
 }

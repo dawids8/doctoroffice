@@ -1,10 +1,11 @@
 package com.doctorsoffice.doctor;
 
-import lombok.Data;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,12 +22,16 @@ public class DoctorController {
     }
 
     @PostMapping("/create")
-    public DoctorDto create(@RequestBody DoctorDto doctorDto) {
-        final Doctor doctor = doctorMapper.fromDto(doctorDto);
+    public DoctorDto create(@Valid @RequestBody DoctorDto doctorDto) {
+        try {
+            final Doctor doctor = doctorMapper.fromDto(doctorDto);
 
-        doctorService.create(doctor);
+            doctorService.create(doctor);
 
-        return doctorMapper.toDto(doctor);
+            return doctorMapper.toDto(doctor);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
     @GetMapping("/get")
