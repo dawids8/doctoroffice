@@ -15,19 +15,19 @@ public class AppointmentDto {
     private String prescription;
     private DoctorDto doctorDto;
     private PatientDto patientDto;
-    private Status status;
+    private AppointmentStatus appointmentStatus;
 
     public AppointmentDto() {
     }
 
     public AppointmentDto(Long id, LocalDateTime date, String diagnosis, String prescription, DoctorDto doctorDto,
-                          PatientDto patientDto, Status status) {
+                          PatientDto patientDto, AppointmentStatus appointmentStatus) {
         this.id = id;
         this.date = date;
         this.diagnosis = diagnosis;
         this.prescription = prescription;
         this.doctorDto = doctorDto;
         this.patientDto = patientDto;
-        this.status = status;
+        this.appointmentStatus = appointmentStatus;
     }
 }

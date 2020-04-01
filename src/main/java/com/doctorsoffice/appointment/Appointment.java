@@ -39,19 +39,19 @@ public class Appointment {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
-    private Status status;
+    private AppointmentStatus appointmentStatus;
 
     public Appointment() {
     }
 
     public Appointment(Long id, LocalDateTime date, String diagnosis, String prescription, Doctor doctor, Patient patient,
-                       Status status) {
+                       AppointmentStatus appointmentStatus) {
         this.id = id;
         this.date = date;
         this.diagnosis = diagnosis;
         this.prescription = prescription;
         this.doctor = doctor;
         this.patient = patient;
-        this.status = status;
+        this.appointmentStatus = appointmentStatus;
     }
 }
