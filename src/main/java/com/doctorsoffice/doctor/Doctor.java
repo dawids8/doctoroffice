@@ -31,7 +31,7 @@ public class Doctor {
     private MedicalSpecialization medicalSpecialization;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor")
     private Schedule schedule;
 
     @ToString.Exclude
