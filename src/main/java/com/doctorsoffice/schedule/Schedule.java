@@ -24,17 +24,19 @@ public class Schedule {
     @Column(name = "INTERVAL_MIN")
     private Long intervalMinutes;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
+    @Column(name = "WEEK_DAY")
+    private WeekDay weekDay;
+
+    @ManyToOne
     @JoinColumn(name = "DOCTOR_FK")
     private Doctor doctor;
 
-    public Schedule() {
-    }
 
-    public Schedule(Long id, LocalTime start, LocalTime finish, Long intervalMinutes) {
-        this.id = id;
+    public Schedule(LocalTime start, LocalTime finish, Long intervalMinutes, WeekDay weekDay) {
         this.start = start;
         this.finish = finish;
         this.intervalMinutes = intervalMinutes;
+        this.weekDay = weekDay;
     }
 }

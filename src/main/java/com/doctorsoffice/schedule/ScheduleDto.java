@@ -1,6 +1,5 @@
 package com.doctorsoffice.schedule;
 
-import com.doctorsoffice.doctor.Doctor;
 import lombok.Data;
 
 import java.time.LocalTime;

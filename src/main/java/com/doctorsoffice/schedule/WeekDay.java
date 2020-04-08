@@ -1,7 +1,6 @@
 package com.doctorsoffice.schedule;
 
 public enum WeekDay {
-
     MONDAY,
     TUESDAY,
     WEDNESDAY,
@@ -9,5 +8,4 @@ public enum WeekDay {
     FRIDAY,
     SATURDAY,
     SUNDAY
-
 }
