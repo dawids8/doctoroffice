@@ -21,7 +21,7 @@ public class ScheduleMapper {
                 .collect(Collectors.toList());
     }
 
-    public Schedule fromDto(ScheduleDto scheduleDto) {
+    /*public Schedule fromDto(ScheduleDto scheduleDto) {
         return new Schedule();
-    }
+    }*/
 }

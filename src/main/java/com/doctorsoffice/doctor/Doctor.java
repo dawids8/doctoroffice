@@ -32,7 +32,7 @@ public class Doctor {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "doctor")
-    private Schedule schedule;
+    private List<Schedule> schedules;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "doctor")

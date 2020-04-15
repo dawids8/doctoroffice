@@ -5,6 +5,7 @@ import com.doctorsoffice.doctor.DoctorRepository;
 import com.doctorsoffice.patient.Patient;
 import com.doctorsoffice.patient.PatientRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,7 +24,12 @@ public class AppointmentService {
         this.patientRepository = patientRepository;
     }
 
-    public void create(Appointment appointment) {
+    @Transactional
+    public void reserve(Appointment appointment) {
+//        boolean isDateAfterNow = appointment.getDate().isAfter(LocalDateTime.now());
+        //2. Dodac metode generujaca wizyty na podstawie id doktora, danych z DEFUALT_SCHEDULE i danych z zewnatrz na jaki okres.
+        //5. Warto pomyslec o alternatywnej metodzie na generowanie wizyt. Wg. dokladnych danych.
+
         final Long doctorId = appointment.getDoctor().getId();
         final Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new NoSuchElementException("There is no doctor with such id"));
@@ -34,10 +40,31 @@ public class AppointmentService {
 
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
+        appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
 
         appointmentRepository.save(appointment);
     }
 
+    public void complete(Long appointmentId, String diagnosis, String prescription) {
+        final Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
+
+        appointment.setDiagnosis(diagnosis);
+        appointment.setPrescription(prescription);
+        appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
+
+        appointmentRepository.save(appointment);
+    }
+
+    public void cancel(Long appointmentId) {
+        final Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
+
+
+        appointmentRepository.save(appointment);
+    }
+
+    @Transactional
     public void delete(Long appointmentId) {
         final Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
@@ -45,13 +72,24 @@ public class AppointmentService {
         appointmentRepository.delete(appointment);
     }
 
+    @Transactional(readOnly = true)
     public Appointment get(Long id) {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
     }
 
+    @Transactional(readOnly = true)
     public List<Appointment> getAll() {
         return appointmentRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<Appointment> getAllByDoctorId(Long id) {
+        return appointmentRepository.findAllByDoctorId(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Appointment> getAllByPatientId(Long id) {
+        return appointmentRepository.findAllByPatientId(id);
+    }
 }

@@ -1,10 +1,8 @@
 package com.doctorsoffice.schedule;
 
+import com.doctorsoffice.doctor.DoctorService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -14,18 +12,18 @@ import java.util.NoSuchElementException;
 @RequestMapping("/schedule")
 public class ScheduleController {
 
-    private final ScheduleService scheduleService;
+    private final DoctorService doctorService;
     private final ScheduleMapper scheduleMapper;
 
-    public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper) {
-        this.scheduleService = scheduleService;
+    public ScheduleController(DoctorService doctorService, ScheduleMapper scheduleMapper) {
+        this.doctorService = doctorService;
         this.scheduleMapper = scheduleMapper;
     }
 
     @GetMapping("/getSchedule")
     public List<ScheduleDto> getSchedule(@RequestParam Long doctorId) {
         try {
-            final List<Schedule> schedules = scheduleService.getSchedules(doctorId);
+            final List<Schedule> schedules = doctorService.getSchedules(doctorId);
 
             return scheduleMapper.toDto(schedules);
         } catch (NoSuchElementException e) {
@@ -34,6 +32,13 @@ public class ScheduleController {
     }
 
     //update schedule dla doktor id i listy scheduleDto (z listy scheduledto, potrzebujemy tylko 4 danych (od, do, interval, dayofweek)
-
-
+    @PutMapping("/update")
+    public List<ScheduleDto> update(@RequestBody UpdateScheduleRequest updateScheduleRequest) {
+        try {
+            List<Schedule> result = doctorService.update(updateScheduleRequest);
+            return scheduleMapper.toDto(result);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+        }
+    }
 }

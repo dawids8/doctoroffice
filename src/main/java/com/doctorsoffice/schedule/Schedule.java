@@ -4,6 +4,7 @@ import com.doctorsoffice.doctor.Doctor;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.print.Doc;
 import java.time.LocalTime;
 
 @Entity(name = "SCHEDULE")
@@ -32,11 +33,14 @@ public class Schedule {
     @JoinColumn(name = "DOCTOR_FK")
     private Doctor doctor;
 
+    public Schedule() {
+    }
 
-    public Schedule(LocalTime start, LocalTime finish, Long intervalMinutes, WeekDay weekDay) {
+    public Schedule(LocalTime start, LocalTime finish, Long intervalMinutes, WeekDay weekDay, Doctor doctor) {
         this.start = start;
         this.finish = finish;
         this.intervalMinutes = intervalMinutes;
         this.weekDay = weekDay;
+        this.doctor = doctor;
     }
 }
