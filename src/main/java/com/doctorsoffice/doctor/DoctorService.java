@@ -26,8 +26,12 @@ public class DoctorService {
         final List<Schedule> actualSchedules = doctor.getSchedules();
         final List<ScheduleDto> scheduleRequestsSchedules = updateScheduleRequests.getSchedules();
 
-        if(actualSchedules == null || actualSchedules.isEmpty()) {
+        if (actualSchedules == null || actualSchedules.isEmpty()) {
             throw new RuntimeException("Doctor doesn't have any schedules");
+        }
+
+        if (actualSchedules.size() != 7) {
+            throw new RuntimeException("Critical exception. Doctor doesn't have seven schedules.");
         }
 
         for (Schedule actualSchedule : actualSchedules) {
