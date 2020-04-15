@@ -28,9 +28,9 @@ public class AppointmentService {
     @Transactional
     public Appointment create(CreateAppointmentRequest createAppointmentRequest) {
         final LocalDateTime appointmentDate = createAppointmentRequest.getAppointmentDate();
-        final boolean isDateAfterNow = appointmentDate.isAfter(LocalDateTime.now());
+        final boolean isFromPast = appointmentDate.isBefore(LocalDateTime.now());
 
-        if(isDateAfterNow) {
+        if(isFromPast) {
             throw new RuntimeException("There is no way to create appointment in past.");
         }
 

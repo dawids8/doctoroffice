@@ -9,6 +9,10 @@ import java.util.stream.Collectors;
 public class PatientMapper {
 
     public PatientDto toDto(Patient patient) {
+        if(patient == null) {
+            return null;
+        }
+
         return new PatientDto(patient.getId(), patient.getFirstname(), patient.getLastname(), patient.getPesel(),
                 patient.getStreet(), patient.getCity(), patient.getPostCode(), patient.getPhoneNumber(), patient.getEmail());
     }
