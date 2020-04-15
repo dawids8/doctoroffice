@@ -1,5 +1,8 @@
 package com.doctorsoffice.appointment;
 
+import com.doctorsoffice.patient.Patient;
+import com.doctorsoffice.patient.PatientService;
+import com.doctorsoffice.validation.ValidationException;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +34,17 @@ public class AppointmentController {
         }
     }
 
-    // reserve appID i patID do rezerwowania wizyty przez pacjenta + walidacje
+    @PutMapping("/reserve")
+    public AppointmentDto reserve(@RequestParam Long appointmentId, @RequestParam Long patientId) {
+        try {
+            final Appointment appointment = this.appointmentService.reserve(appointmentId, patientId);
+            return appointmentMapper.toDto(appointment);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(e.getHttpStatus(), e.getMessage());
+        }
+    }
 
 //    @PutMapping("/fill")
 //    public AppointmentDto fill(@RequestBody AppointmentDto appointmentDto) {

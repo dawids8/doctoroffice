@@ -4,6 +4,7 @@ import com.doctorsoffice.doctor.Doctor;
 import com.doctorsoffice.doctor.DoctorRepository;
 import com.doctorsoffice.patient.Patient;
 import com.doctorsoffice.patient.PatientRepository;
+import com.doctorsoffice.validation.ValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,24 @@ public class AppointmentService {
         appointment.setDate(appointmentDate);
         appointment.setDoctor(doctor);
         appointment.setAppointmentStatus(AppointmentStatus.AVAILABLE);
+
+        return appointmentRepository.save(appointment);
+    }
+
+    @Transactional
+    public Appointment reserve(Long appointmentId, Long patientId) {
+        final Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
+
+        if (!AppointmentStatus.AVAILABLE.equals(appointment.getAppointmentStatus())) {
+            throw new ValidationException("Appointment is  already reserved.");
+        }
+
+        final Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new NoSuchElementException("There is no patient with such id"));
+
+        appointment.setPatient(patient);
+        appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
 
         return appointmentRepository.save(appointment);
     }
@@ -94,4 +113,5 @@ public class AppointmentService {
     public List<Appointment> getAllByPatientId(Long id) {
         return appointmentRepository.findAllByPatientId(id);
     }
+
 }
