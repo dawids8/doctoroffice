@@ -22,16 +22,13 @@ public class AppointmentController {
     }
 
     @PostMapping("/create")
-    public AppointmentDto create(@RequestBody AppointmentDto appointmentDto) { // dodawanie pojedynczej wizyty
-        final Appointment appointment = appointmentMapper.fromDto(appointmentDto);
-
+    public AppointmentDto create(@RequestBody CreateAppointmentRequest createAppointmentRequest) {
         try {
-            appointmentService.reserve(appointment);
+            final Appointment appointment = this.appointmentService.create(createAppointmentRequest);
+            return appointmentMapper.toDto(appointment);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return appointmentMapper.toDto(appointment);
     }
 
     // reserve appID i patID do rezerwowania wizyty przez pacjenta + walidacje

@@ -7,6 +7,7 @@ import com.doctorsoffice.patient.PatientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -25,24 +26,24 @@ public class AppointmentService {
     }
 
     @Transactional
-    public void reserve(Appointment appointment) {
-//        boolean isDateAfterNow = appointment.getDate().isAfter(LocalDateTime.now());
-        //2. Dodac metode generujaca wizyty na podstawie id doktora, danych z DEFUALT_SCHEDULE i danych z zewnatrz na jaki okres.
-        //5. Warto pomyslec o alternatywnej metodzie na generowanie wizyt. Wg. dokladnych danych.
+    public Appointment create(CreateAppointmentRequest createAppointmentRequest) {
+        final LocalDateTime appointmentDate = createAppointmentRequest.getAppointmentDate();
+        final boolean isDateAfterNow = appointmentDate.isAfter(LocalDateTime.now());
 
-        final Long doctorId = appointment.getDoctor().getId();
+        if(isDateAfterNow) {
+            throw new RuntimeException("There is no way to create appointment in past.");
+        }
+
+        final Long doctorId = createAppointmentRequest.getDoctorId();
         final Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new NoSuchElementException("There is no doctor with such id"));
 
-        final Long patientID = appointment.getPatient().getId();
-        final Patient patient = patientRepository.findById(patientID)
-                .orElseThrow(() -> new NoSuchElementException("There is no patient with such id"));
-
+        final Appointment appointment = new Appointment();
+        appointment.setDate(appointmentDate);
         appointment.setDoctor(doctor);
-        appointment.setPatient(patient);
-        appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
+        appointment.setAppointmentStatus(AppointmentStatus.AVAILABLE);
 
-        appointmentRepository.save(appointment);
+        return appointmentRepository.save(appointment);
     }
 
     public void complete(Long appointmentId, String diagnosis, String prescription) {
@@ -56,6 +57,7 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
     }
 
+    //todo
     public void cancel(Long appointmentId) {
         final Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
