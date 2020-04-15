@@ -3,23 +3,23 @@ package com.doctorsoffice.appointment;
 public enum AppointmentStatus {
 
     /**
-     * Dostępna do zapisu
+     * Appointment is available to book
      */
     AVAILABLE,
     /**
-     * Nie odbyła się, z powodu braku rejestracji
+     * Appointment did not take place as it was not reserved
      */
     EXPIRED,
     /**
-     * Zarezerwowana
+     * Appointment is reserved
      */
-    BOOKED,
+    RESERVED,
     /**
-     * Nie odbyła się, ponieważ pacjent nie przyszedł
+     * Appointment did not take place- No show by patient
      */
     NOT_COMPLETED,
     /**
-     * Zakończona
+     * Appointment is finished and completed by doctor
      */
     COMPLETED
 
