@@ -93,6 +93,17 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    @Transactional
+    public Appointment resignationByPatient(Long appointmentId) {
+        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.BOOKED,
+                "There is no option to cancel appointment if it is not booked");
+
+        appointment.setPatient(null);
+        appointment.setAppointmentStatus(AppointmentStatus.AVAILABLE);
+
+        return appointmentRepository.save(appointment);
+    }
+
     private Appointment getAppointment(Long appointmentId, AppointmentStatus status, String message) {
         final Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
@@ -106,10 +117,12 @@ public class AppointmentService {
 
     @Transactional
     public void delete(Long appointmentId) {
-        //czy status to available
-
         final Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
+
+        if (!appointment.getAppointmentStatus().equals(AppointmentStatus.AVAILABLE)) {
+            throw new ValidationException("You can only delete appointment if status is AVAILABLE");
+        }
 
         appointmentRepository.delete(appointment);
     }
