@@ -1,7 +1,5 @@
 package com.doctorsoffice.appointment;
 
-import com.doctorsoffice.patient.Patient;
-import com.doctorsoffice.patient.PatientService;
 import com.doctorsoffice.validation.ValidationException;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -46,10 +44,41 @@ public class AppointmentController {
         }
     }
 
-//    @PutMapping("/fill")
-//    public AppointmentDto fill(@RequestBody AppointmentDto appointmentDto) {
-//     z appointmentDto wyciagam ID i wrzucam do metody na serwisie do jej uzupełnienia
-//    }
+    @PutMapping("/complete")
+    public AppointmentDto complete(@RequestBody CompleteAppointmentRequest completeAppointmentRequest) {
+        try {
+            final Appointment appointment = this.appointmentService.complete(completeAppointmentRequest);
+            return appointmentMapper.toDto(appointment);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(e.getHttpStatus(), e.getMessage());
+        }
+    }
+
+    @PutMapping("/setAsNotCompleted")
+    public AppointmentDto setAsNotCompleted(@RequestParam Long appointmentId) {
+        try {
+            final Appointment appointment = this.appointmentService.setAsNotCompleted(appointmentId);
+            return appointmentMapper.toDto(appointment);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(e.getHttpStatus(), e.getMessage());
+        }
+    }
+
+    @PutMapping("/cancel")
+    public AppointmentDto cancel(@RequestParam Long appointmentId) {
+        try {
+            final Appointment appointment = this.appointmentService.cancel(appointmentId);
+            return appointmentMapper.toDto(appointment);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(e.getHttpStatus(), e.getMessage());
+        }
+    }
 
     @DeleteMapping("/delete")
     public void delete(@RequestParam Long id) {

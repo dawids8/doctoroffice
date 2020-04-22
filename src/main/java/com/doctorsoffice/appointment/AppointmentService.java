@@ -49,12 +49,8 @@ public class AppointmentService {
 
     @Transactional
     public Appointment reserve(Long appointmentId, Long patientId) {
-        final Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
-
-        if (!AppointmentStatus.AVAILABLE.equals(appointment.getAppointmentStatus())) {
-            throw new ValidationException("Appointment is  already reserved.");
-        }
+        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.AVAILABLE,
+                "Appointment is already reserved.");
 
         final Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new NoSuchElementException("There is no patient with such id"));
@@ -65,28 +61,53 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
-    public void complete(Long appointmentId, String diagnosis, String prescription) {
-        final Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
+    @Transactional
+    public Appointment complete(CompleteAppointmentRequest completeAppointmentRequest) {
+        final Appointment appointment = getAppointment(completeAppointmentRequest.getAppointmentId(), AppointmentStatus.BOOKED,
+                "There is no option to complete appointment that wasn't reserved before");
 
-        appointment.setDiagnosis(diagnosis);
-        appointment.setPrescription(prescription);
+        appointment.setDiagnosis(completeAppointmentRequest.getDiagnosis());
+        appointment.setPrescription(completeAppointmentRequest.getPrescription());
         appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
 
-        appointmentRepository.save(appointment);
+        return appointmentRepository.save(appointment);
     }
 
-    //todo
-    public void cancel(Long appointmentId) {
+    @Transactional
+    public Appointment setAsNotCompleted(Long appointmentId) {
+        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.BOOKED,
+                "Only reserved appointments will be completed");
+
+        appointment.setAppointmentStatus(AppointmentStatus.NOT_COMPLETED);
+
+        return appointmentRepository.save(appointment);
+    }
+
+    @Transactional
+    public Appointment cancel(Long appointmentId) {
+        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.BOOKED,
+                "There is no option to cancel appointment if it is not booked");
+
+        appointment.setAppointmentStatus(AppointmentStatus.CANCELED);
+
+        return appointmentRepository.save(appointment);
+    }
+
+    private Appointment getAppointment(Long appointmentId, AppointmentStatus status, String message) {
         final Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
 
+        if (!status.equals(appointment.getAppointmentStatus())) {
+            throw new ValidationException(message);
+        }
 
-        appointmentRepository.save(appointment);
+        return appointment;
     }
 
     @Transactional
     public void delete(Long appointmentId) {
+        //czy status to available
+
         final Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new NoSuchElementException("There is no appointment with such id"));
 
