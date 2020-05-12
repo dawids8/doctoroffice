@@ -14,12 +14,13 @@ public class UserDto {
     private LocalDate dateOfBirth;
     private String email;
     private String phoneNumber;
+    private String userRole;
 
     public UserDto() {
     }
 
     public UserDto(Long id, String username, String firstname, String lastname, LocalDate dateOfBirth, String email,
-                   String phoneNumber) {
+                   String phoneNumber, String userRole) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;
@@ -27,5 +28,6 @@ public class UserDto {
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.userRole = userRole;
     }
 }

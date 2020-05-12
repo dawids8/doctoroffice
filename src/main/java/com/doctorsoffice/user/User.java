@@ -1,5 +1,7 @@
 package com.doctorsoffice.user;
 
+import com.doctorsoffice.doctor.Doctor;
+import com.doctorsoffice.patient.Patient;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -43,11 +45,16 @@ public class User {
     @NotNull
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE")
+    @NotNull
+    private UserRole userRole;
+
     public User() {
     }
 
     public User(Long id, String username, String password, String firstname, String lastname, LocalDate dateOfBirth, String email,
-                String phoneNumber) {
+                String phoneNumber, UserRole userRole) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -56,6 +63,7 @@ public class User {
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.userRole = userRole;
     }
 
 }

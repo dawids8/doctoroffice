@@ -2,6 +2,7 @@ package com.doctorsoffice.doctor;
 
 import com.doctorsoffice.appointment.Appointment;
 import com.doctorsoffice.schedule.Schedule;
+import com.doctorsoffice.user.User;
 import lombok.Data;
 import lombok.ToString;
 
@@ -37,6 +38,11 @@ public class Doctor {
     @ToString.Exclude
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointmentList;
+
+    @ToString.Exclude
+    @OneToOne
+    @JoinColumn(name = "USER_FK")
+    private User user;
 
     public Doctor() {
     }

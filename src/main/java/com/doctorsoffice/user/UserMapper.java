@@ -7,11 +7,12 @@ public class UserMapper {
 
     public UserDto toDto(User user) {
         return new UserDto(user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(),
-                user.getDateOfBirth(), user.getEmail(), user.getPhoneNumber());
+                user.getDateOfBirth(), user.getEmail(), user.getPhoneNumber(), user.getUserRole().toString());
     }
 
     public User fromDto(UserDto userDto) {
         return new User(userDto.getId(), userDto.getUsername(), userDto.getPassword(), userDto.getFirstname(),
-                userDto.getLastname(), userDto.getDateOfBirth(), userDto.getEmail(), userDto.getPhoneNumber());
+                userDto.getLastname(), userDto.getDateOfBirth(), userDto.getEmail(), userDto.getPhoneNumber(),
+                UserRole.valueOf(userDto.getUserRole()));
     }
 }
