@@ -1,7 +1,6 @@
 package com.doctorsoffice.user;
 
-import com.doctorsoffice.doctor.Doctor;
-import com.doctorsoffice.patient.Patient;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,6 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
+@Builder
 public class User {
 
     @Id
@@ -37,6 +37,9 @@ public class User {
     @NotNull
     private LocalDate dateOfBirth;
 
+    @Column(name = "PESEL", unique = true)
+    private String pesel;
+
     @Column(name = "EMAIL", unique = true)
     @NotNull
     private String email;
@@ -44,6 +47,15 @@ public class User {
     @Column(name = "PHONE_NUMBER", unique = true)
     @NotNull
     private String phoneNumber;
+
+    @Column(name = "STREET")
+    private String street;
+
+    @Column(name = "CITY")
+    private String city;
+
+    @Column(name = "POST_CODE")
+    private String postCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE")
@@ -53,17 +65,20 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String firstname, String lastname, LocalDate dateOfBirth, String email,
-                String phoneNumber, UserRole userRole) {
+    public User(Long id, String username, String password, String firstname, String lastname, LocalDate dateOfBirth,
+                String pesel, String email, String phoneNumber, String street, String city, String postCode, UserRole userRole) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
         this.dateOfBirth = dateOfBirth;
+        this.pesel = pesel;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.street = street;
+        this.city = city;
+        this.postCode = postCode;
         this.userRole = userRole;
     }
-
 }
