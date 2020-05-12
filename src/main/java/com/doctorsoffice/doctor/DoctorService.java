@@ -56,12 +56,6 @@ public class DoctorService {
 
     @Transactional
     public void create(Doctor doctor) {
-        final boolean isPeselInUse = doctorRepository.existsByPesel(doctor.getPesel());
-
-        if (isPeselInUse) {
-            throw new DataIntegrityViolationException("Pesel already in use.");
-        }
-
         final List<Schedule> schedules = new ArrayList<>();
 
         schedules.add(new Schedule(null, null, null, WeekDay.MONDAY, doctor));

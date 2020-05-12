@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 public class DoctorMapper {
 
     public DoctorDto toDto(Doctor doctor) {
-        return new DoctorDto(doctor.getId(), doctor.getFirstname(), doctor.getPesel(), doctor.getLastname(),
-                doctor.getMedicalSpecialization());
+        return DoctorDto.builder()
+                .id(doctor.getId())
+                .medicalSpecialization(doctor.getMedicalSpecialization())
+                .build();
     }
 
     public List<DoctorDto> toDto(List<Doctor> doctorsList) {
@@ -20,7 +22,9 @@ public class DoctorMapper {
     }
 
     public Doctor fromDto(DoctorDto doctorDto) {
-        return new Doctor(doctorDto.getId(), doctorDto.getFirstname(), doctorDto.getLastname(), doctorDto.getPesel(),
-                doctorDto.getMedicalSpecialization());
+        return Doctor.builder()
+                .id(doctorDto.getId())
+                .medicalSpecialization(doctorDto.getMedicalSpecialization())
+                .build();
     }
 }
