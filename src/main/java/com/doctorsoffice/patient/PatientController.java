@@ -21,18 +21,18 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @PostMapping("/create")
-    public PatientDto create(@RequestBody PatientDto patientDto) {
-        try {
-            final Patient patient = patientMapper.fromDto(patientDto);
-
-            patientService.create(patient);
-
-            return patientMapper.toDto(patient);
-        } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
+//    @PostMapping("/create")
+//    public PatientDto create(@RequestBody PatientDto patientDto) {
+//        try {
+//            final Patient patient = patientMapper.fromDto(patientDto);
+//
+//            patientService.create(patient);
+//
+//            return patientMapper.toDto(patient);
+//        } catch (DataIntegrityViolationException e) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//        }
+//    }
 
     @GetMapping("/get")
     public PatientDto get(@RequestParam Long id) {
@@ -50,9 +50,9 @@ public class PatientController {
         return patientMapper.toDto(patientList);
     }
 
-    @GetMapping("/getByPesel")
-    public PatientDto getByPesel(@RequestParam String pesel) {
-        final Patient patient = patientService.getByPesel(pesel);
-        return patientMapper.toDto(patient);
-    }
+//    @GetMapping("/getByPesel")
+//    public PatientDto getByPesel(@RequestParam String pesel) {
+//        final Patient patient = patientService.getByPesel(pesel);
+//        return patientMapper.toDto(patient);
+//    }
 }

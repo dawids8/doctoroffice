@@ -1,8 +1,13 @@
 package com.doctorsoffice.user;
 
+import com.doctorsoffice.patient.Patient;
 import lombok.Data;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Data
@@ -31,6 +36,20 @@ public class UserService {
 
         } else {
             System.out.println("This username doesn't exist");
+        }
+    }
+
+    private void validatePatient(User user) {
+        final List<Boolean> list = Arrays.asList(userRepository.existsPatientByPesel(user.getPesel()),
+                userRepository.existsPatientByPhoneNumber(user.getPhoneNumber()),
+                userRepository.existsPatientByEmail(user.getEmail()));
+
+        if (list.get(0)) {
+            throw new DataIntegrityViolationException("Pesel already in use");
+        } else if (list.get(1)) {
+            throw new DataIntegrityViolationException("Phone number already in use");
+        } else if (list.get(2)) {
+            throw new DataIntegrityViolationException("Email already in use");
         }
     }
 

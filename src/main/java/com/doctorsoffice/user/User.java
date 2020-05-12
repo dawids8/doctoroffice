@@ -1,5 +1,8 @@
 package com.doctorsoffice.user;
 
+import com.doctorsoffice.doctor.Doctor;
+import com.doctorsoffice.patient.Patient;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,6 +13,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -62,23 +66,13 @@ public class User {
     @NotNull
     private UserRole userRole;
 
+    @OneToOne(mappedBy = "user")
+    private Doctor doctor;
+
+    @OneToOne(mappedBy = "user")
+    private Patient patient;
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String firstname, String lastname, LocalDate dateOfBirth,
-                String pesel, String email, String phoneNumber, String street, String city, String postCode, UserRole userRole) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.dateOfBirth = dateOfBirth;
-        this.pesel = pesel;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.street = street;
-        this.city = city;
-        this.postCode = postCode;
-        this.userRole = userRole;
-    }
 }

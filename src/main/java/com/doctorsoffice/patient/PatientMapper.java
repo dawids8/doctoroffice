@@ -13,8 +13,7 @@ public class PatientMapper {
             return null;
         }
 
-        return new PatientDto(patient.getId(), patient.getFirstname(), patient.getLastname(), patient.getPesel(),
-                patient.getStreet(), patient.getCity(), patient.getPostCode(), patient.getPhoneNumber(), patient.getEmail());
+        return new PatientDto(patient.getId());
     }
 
     public List<PatientDto> toDto(List<Patient> patientsList) {
@@ -24,9 +23,7 @@ public class PatientMapper {
     }
 
     public Patient fromDto(PatientDto patientDto) {
-        return new Patient(patientDto.getId(), patientDto.getFirstname(), patientDto.getLastname(), patientDto.getPesel(),
-                patientDto.getStreet(), patientDto.getCity(), patientDto.getPostCode(), patientDto.getPhoneNumber(),
-                patientDto.getEmail());
+        return new Patient(patientDto.getId());
     }
 
 }
