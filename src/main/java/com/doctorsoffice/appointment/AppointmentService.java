@@ -56,14 +56,14 @@ public class AppointmentService {
                 .orElseThrow(() -> new NoSuchElementException("There is no patient with such id"));
 
         appointment.setPatient(patient);
-        appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
+        appointment.setAppointmentStatus(AppointmentStatus.RESERVED);
 
         return appointmentRepository.save(appointment);
     }
 
     @Transactional
     public Appointment complete(CompleteAppointmentRequest completeAppointmentRequest) {
-        final Appointment appointment = getAppointment(completeAppointmentRequest.getAppointmentId(), AppointmentStatus.BOOKED,
+        final Appointment appointment = getAppointment(completeAppointmentRequest.getAppointmentId(), AppointmentStatus.RESERVED,
                 "There is no option to complete appointment that wasn't reserved before");
 
         appointment.setDiagnosis(completeAppointmentRequest.getDiagnosis());
@@ -75,8 +75,8 @@ public class AppointmentService {
 
     @Transactional
     public Appointment setAsNotCompleted(Long appointmentId) {
-        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.BOOKED,
-                "Only reserved appointments will be completed");
+        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.RESERVED,
+                "Only reserved appointments will be not completed");
 
         appointment.setAppointmentStatus(AppointmentStatus.NOT_COMPLETED);
 
@@ -85,8 +85,8 @@ public class AppointmentService {
 
     @Transactional
     public Appointment cancel(Long appointmentId) {
-        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.BOOKED,
-                "There is no option to cancel appointment if it is not booked");
+        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.RESERVED,
+                "There is no option to cancel appointment if it is not reserved");
 
         appointment.setAppointmentStatus(AppointmentStatus.CANCELED);
 
@@ -95,8 +95,8 @@ public class AppointmentService {
 
     @Transactional
     public Appointment resignationByPatient(Long appointmentId) {
-        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.BOOKED,
-                "There is no option to cancel appointment if it is not booked");
+        final Appointment appointment = getAppointment(appointmentId, AppointmentStatus.RESERVED,
+                "There is no option to cancel appointment if it is not reserved");
 
         appointment.setPatient(null);
         appointment.setAppointmentStatus(AppointmentStatus.AVAILABLE);

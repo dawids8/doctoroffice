@@ -13,7 +13,7 @@ public enum AppointmentStatus {
     /**
      * Appointment is reserved
      */
-    BOOKED,
+    RESERVED,
     /**
      * Appointment is canceled
      */
