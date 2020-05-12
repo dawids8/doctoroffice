@@ -1,6 +1,9 @@
 package com.doctorsoffice.user;
 
+import com.doctorsoffice.doctor.Doctor;
 import com.doctorsoffice.doctor.DoctorRepository;
+import com.doctorsoffice.doctor.MedicalSpecialization;
+import com.doctorsoffice.patient.Patient;
 import com.doctorsoffice.patient.PatientRepository;
 import com.doctorsoffice.validation.ValidationException;
 import lombok.Data;
@@ -25,13 +28,22 @@ public class UserService {
         this.patientRepository = patientRepository;
     }
 
-    public void create(User user) {
+    @Transactional
+    public void create(User user, MedicalSpecialization medicalSpecialization) {
         validateUser(user);
 
         switch (user.getUserRole()) {
             case DOCTOR:
+                final Doctor doctor = Doctor.builder()
+                        .medicalSpecialization(medicalSpecialization)
+                        .build();
+                doctor.setUser(user);
+                doctorRepository.save(doctor);
                 break;
             case PATIENT:
+                final Patient patient = new Patient();
+                patient.setUser(user);
+                patientRepository.save(patient);
                 break;
             default:
                 throw new ValidationException("User role is invalid.");

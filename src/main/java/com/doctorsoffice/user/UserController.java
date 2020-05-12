@@ -24,7 +24,7 @@ public class UserController {
         final User user = userMapper.fromDto(userDto);
 
         try {
-            userService.create(user);
+            userService.create(user, userDto.getMedicalSpecialization());
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Dane nie są unikatowe!");
         }
