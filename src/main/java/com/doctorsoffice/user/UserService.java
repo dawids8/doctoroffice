@@ -8,6 +8,7 @@ import com.doctorsoffice.patient.PatientRepository;
 import com.doctorsoffice.validation.ValidationException;
 import lombok.Data;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,16 +22,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository) {
+    public UserService(UserRepository userRepository, DoctorRepository doctorRepository, PatientRepository patientRepository,
+                       BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Transactional
     public void create(User user, MedicalSpecialization medicalSpecialization) {
         validateUser(user);
+        final String password = user.getPassword();
+        final String encodedPassword = bCryptPasswordEncoder.encode(password);
+        user.setPassword(encodedPassword);
 
         switch (user.getUserRole()) {
             case DOCTOR:
