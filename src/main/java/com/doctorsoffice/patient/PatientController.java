@@ -12,7 +12,6 @@ import java.util.NoSuchElementException;
 @RequestMapping("/patient")
 public class PatientController {
 
-
     private final PatientMapper patientMapper;
     private final PatientService patientService;
 
