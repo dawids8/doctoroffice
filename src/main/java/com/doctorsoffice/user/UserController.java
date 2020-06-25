@@ -32,8 +32,4 @@ public class UserController {
         return userMapper.toDto(user);
     }
 
-    @PostMapping("/login")
-    public void login(@RequestParam String username, @RequestParam String password) {
-        userService.login(username, password);
-    }
 }

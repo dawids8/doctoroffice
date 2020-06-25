@@ -73,19 +73,4 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public void login(String username, String password) {
-        User user = userRepository.findByUsername(username);
-
-        if (user != null) {
-            if (user.getPassword().equals(password)) {
-                System.out.println("Correct");
-            } else {
-                System.out.println("Wrong password");
-            }
-
-        } else {
-            System.out.println("This username doesn't exist");
-        }
-    }
 }
