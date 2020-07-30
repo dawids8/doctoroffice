@@ -32,21 +32,25 @@ public class AppointmentService {
 
     @Transactional
     public Appointment create(CreateAppointmentRequest createAppointmentRequest) {
-        final LocalDateTime appointmentDate = createAppointmentRequest.getAppointmentDate();
-        final boolean isFromPast = appointmentDate.isBefore(LocalDateTime.now());
+        final LocalDateTime startDate = createAppointmentRequest.getStartDate();
+        final boolean isFromPast = startDate.isBefore(LocalDateTime.now());
 
         if(isFromPast) {
-            throw new RuntimeException("There is no way to create appointment in past.");
+            throw new RuntimeException("There is no way to create appointment in past."); // ? sprawdzić
+        }
+
+        final LocalDateTime endDate = createAppointmentRequest.getEndDate();
+        final boolean isBeforeStartDate = endDate.isBefore(LocalDateTime.now());
+
+        if(isBeforeStartDate) {
+            throw new RuntimeException("There is no way to create appointment before start date."); // Utworzyć exception, zeby nie rzucac Runtime
         }
 
         final Long doctorId = createAppointmentRequest.getDoctorId();
         final Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new NoSuchElementException("There is no doctor with such id"));
 
-        final Appointment appointment = new Appointment();
-        appointment.setDate(appointmentDate);
-        appointment.setDoctor(doctor);
-        appointment.setAppointmentStatus(AppointmentStatus.AVAILABLE);
+        final Appointment appointment = new Appointment(startDate, endDate, doctor, AppointmentStatus.AVAILABLE);
 
         return appointmentRepository.save(appointment);
     }

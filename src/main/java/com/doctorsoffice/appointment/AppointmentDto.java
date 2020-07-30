@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 public class AppointmentDto {
 
     private Long id;
-    private LocalDateTime date;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String diagnosis;
     private String prescription;
     private DoctorDto doctorDto;
@@ -20,10 +21,11 @@ public class AppointmentDto {
     public AppointmentDto() {
     }
 
-    public AppointmentDto(Long id, LocalDateTime date, String diagnosis, String prescription, DoctorDto doctorDto,
+    public AppointmentDto(Long id, LocalDateTime startDate , LocalDateTime endDate, String diagnosis, String prescription, DoctorDto doctorDto,
                           PatientDto patientDto, AppointmentStatus appointmentStatus) {
         this.id = id;
-        this.date = date;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.diagnosis = diagnosis;
         this.prescription = prescription;
         this.doctorDto = doctorDto;

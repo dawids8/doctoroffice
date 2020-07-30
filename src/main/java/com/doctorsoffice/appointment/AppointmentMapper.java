@@ -26,7 +26,7 @@ public class AppointmentMapper {
         final DoctorDto doctorDto = doctorMapper.toDto(appointment.getDoctor());
         final PatientDto patientDto = patientMapper.toDto(appointment.getPatient());
 
-        return new AppointmentDto(appointment.getId(), appointment.getDate(), appointment.getDiagnosis(),
+        return new AppointmentDto(appointment.getId(), appointment.getStartDate(), appointment.getEndDate(), appointment.getDiagnosis(),
                 appointment.getPrescription(), doctorDto, patientDto, appointment.getAppointmentStatus());
     }
 
@@ -40,7 +40,7 @@ public class AppointmentMapper {
         final Doctor doctor = doctorMapper.fromDto(appointmentDto.getDoctorDto());
         final Patient patient = patientMapper.fromDto(appointmentDto.getPatientDto());
 
-        return new Appointment(appointmentDto.getId(), appointmentDto.getDate(), appointmentDto.getDiagnosis(),
+        return new Appointment(appointmentDto.getId(), appointmentDto.getStartDate(), appointmentDto.getEndDate(), appointmentDto.getDiagnosis(),
                 appointmentDto.getPrescription(), doctor, patient, appointmentDto.getAppointmentStatus());
     }
 }
