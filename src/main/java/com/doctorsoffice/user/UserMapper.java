@@ -36,7 +36,7 @@ public class UserMapper {
                 .city(userDto.getCity())
                 .street(userDto.getStreet())
                 .postCode(userDto.getPostCode())
-                .userRole(UserRole.valueOf(userDto.getUserRole()))
+                .userRole(UserRole.valueOf(userDto.getUserRole().toUpperCase()))
                 .build();
     }
 }

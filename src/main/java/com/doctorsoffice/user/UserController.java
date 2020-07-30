@@ -21,6 +21,7 @@ public class UserController {
 
     @PostMapping("/create")
     public UserDto createUser(@RequestBody UserDto userDto) {
+        System.out.println(userDto);
         final User user = userMapper.fromDto(userDto);
 
         try {

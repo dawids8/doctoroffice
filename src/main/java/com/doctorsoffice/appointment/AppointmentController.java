@@ -105,14 +105,20 @@ public class AppointmentController {
         return appointmentMapper.toDto(appointments);
     }
 
-    @GetMapping("/getAllByDoctorId")
-    public List<AppointmentDto> getAllByDoctorId(@RequestParam Long id) {
-        final List<Appointment> appointments = appointmentService.getAllByDoctorId(id);
-        return appointmentMapper.toDto(appointments);
+    @GetMapping("/getAllByDoctorUsername")
+    public List<AppointmentDto> getAllByDoctorUsername(@RequestParam String username) {
+        try {
+            final List<Appointment> appointments = appointmentService.getAllByDoctorUsername(username);
+            return appointmentMapper.toDto(appointments);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(e.getHttpStatus(), e.getMessage());
+        }
     }
 
     @GetMapping("/getAllByPatientId")
-    public List<AppointmentDto> getAllByPatientrId(@RequestParam Long id) {
+    public List<AppointmentDto> getAllByPatientId(@RequestParam Long id) {
         final List<Appointment> appointments = appointmentService.getAllByPatientId(id);
         return appointmentMapper.toDto(appointments);
     }

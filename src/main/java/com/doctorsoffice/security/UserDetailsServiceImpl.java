@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -20,7 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final User user = userRepository.findByUsername(username);
+        final User user = userRepository.findByUsername(username)
+                                         .orElseThrow(() -> new NoSuchElementException("User name not exist"));
 
         if (user == null) {
             throw new UsernameNotFoundException(username);

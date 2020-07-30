@@ -4,6 +4,8 @@ import com.doctorsoffice.doctor.Doctor;
 import com.doctorsoffice.doctor.DoctorRepository;
 import com.doctorsoffice.patient.Patient;
 import com.doctorsoffice.patient.PatientRepository;
+import com.doctorsoffice.user.User;
+import com.doctorsoffice.user.UserRepository;
 import com.doctorsoffice.validation.ValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +20,14 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final UserRepository userRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository,
-                              PatientRepository patientRepository) {
+                              PatientRepository patientRepository, UserRepository userRepository) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -136,6 +140,20 @@ public class AppointmentService {
     @Transactional(readOnly = true)
     public List<Appointment> getAll() {
         return appointmentRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Appointment> getAllByDoctorUsername(String username) {
+        final User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User name not exist"));
+
+        final Doctor doctor = user.getDoctor();
+
+        if (doctor == null) {
+            throw new ValidationException("User is not a doctor");
+        }
+
+        return appointmentRepository.findAllByDoctorId(doctor.getId());
     }
 
     @Transactional(readOnly = true)

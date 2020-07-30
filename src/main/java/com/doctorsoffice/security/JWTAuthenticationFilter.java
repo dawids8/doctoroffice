@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import static com.doctorsoffice.security.SecurityConstants.*;
 
@@ -54,7 +55,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain, Authentication authResult) {
         final String username = ((User) authResult.getPrincipal()).getUsername();
 
-        final com.doctorsoffice.user.User user = this.userRepository.findByUsername(username);
+        final com.doctorsoffice.user.User user = this.userRepository.findByUsername(username)
+                                                .orElseThrow(() -> new NoSuchElementException("User name not exist"));
         final String role;
 
         if (user.getDoctor() != null) {
