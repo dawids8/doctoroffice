@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 public class ScheduleMapper {
 
     public ScheduleDto toDto(Schedule schedule) {
-        return new ScheduleDto(schedule.getId(), schedule.getStart(), schedule.getFinish(), schedule.getIntervalMinutes(),
-                schedule.getWeekDay());
+        return new ScheduleDto(schedule.getId(), schedule.getStart(), schedule.getFinish(), schedule.getAppointmentDuration(),
+                schedule.getIntervalMinutes(), schedule.getWeekDay());
     }
 
     public List<ScheduleDto> toDto(List<Schedule> scheduleList) {

@@ -22,6 +22,9 @@ public class Schedule {
     @Column(name = "FINISH")
     private LocalTime finish;
 
+    @Column(name = "APPOINTMENT_DURATION")
+    private Long appointmentDuration;
+
     @Column(name = "INTERVAL_MIN")
     private Long intervalMinutes;
 
@@ -36,9 +39,10 @@ public class Schedule {
     public Schedule() {
     }
 
-    public Schedule(LocalTime start, LocalTime finish, Long intervalMinutes, WeekDay weekDay, Doctor doctor) {
+    public Schedule(LocalTime start, LocalTime finish, Long appointmentDuration, Long intervalMinutes, WeekDay weekDay, Doctor doctor) {
         this.start = start;
         this.finish = finish;
+        this.appointmentDuration = appointmentDuration;
         this.intervalMinutes = intervalMinutes;
         this.weekDay = weekDay;
         this.doctor = doctor;
