@@ -39,6 +39,7 @@ public class DoctorService {
                 if (actualSchedule.getWeekDay().equals(requestSchedule.getWeekDay())) {
                     actualSchedule.setStart(requestSchedule.getStart());
                     actualSchedule.setFinish(requestSchedule.getFinish());
+                    actualSchedule.setAppointmentDuration(requestSchedule.getAppointmentDuration());
                     actualSchedule.setIntervalMinutes(requestSchedule.getIntervalMinutes());
                     this.scheduleRepository.save(actualSchedule);
                 }
@@ -52,22 +53,6 @@ public class DoctorService {
     public List<Schedule> getSchedules(Long doctorId) {
         final Doctor doctor = get(doctorId);
         return scheduleRepository.findAllByDoctor(doctor);
-    }
-
-    @Transactional
-    public void create(Doctor doctor) {
-        final List<Schedule> schedules = new ArrayList<>();
-
-        schedules.add(new Schedule(null, null, null, WeekDay.MONDAY, doctor));
-        schedules.add(new Schedule(null, null, null, WeekDay.TUESDAY, doctor));
-        schedules.add(new Schedule(null, null, null, WeekDay.WEDNESDAY, doctor));
-        schedules.add(new Schedule(null, null, null, WeekDay.THURSDAY, doctor));
-        schedules.add(new Schedule(null, null, null, WeekDay.FRIDAY, doctor));
-        schedules.add(new Schedule(null, null, null, WeekDay.SATURDAY, doctor));
-        schedules.add(new Schedule(null, null, null, WeekDay.SUNDAY, doctor));
-
-        doctorRepository.save(doctor);
-        schedules.forEach(scheduleRepository::save);
     }
 
     @Transactional(readOnly = true)
