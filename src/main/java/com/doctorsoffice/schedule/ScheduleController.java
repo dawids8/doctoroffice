@@ -21,9 +21,9 @@ public class ScheduleController {
     }
 
     @GetMapping("/getSchedule")
-    public List<ScheduleDto> getSchedule(@RequestParam Long doctorId) {
+    public List<ScheduleDto> getSchedule(@RequestParam String username) {
         try {
-            final List<Schedule> schedules = doctorService.getSchedules(doctorId);
+            final List<Schedule> schedules = doctorService.getSchedules(username);
 
             return scheduleMapper.toDto(schedules);
         } catch (NoSuchElementException e) {
@@ -31,7 +31,6 @@ public class ScheduleController {
         }
     }
 
-    //update schedule dla doktor id i listy scheduleDto (z listy scheduledto, potrzebujemy tylko 4 danych (od, do, interval, dayofweek)
     @PutMapping("/update")
     public List<ScheduleDto> update(@RequestBody UpdateScheduleRequest updateScheduleRequest) {
         try {

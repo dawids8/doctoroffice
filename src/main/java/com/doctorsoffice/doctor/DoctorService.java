@@ -1,11 +1,11 @@
 package com.doctorsoffice.doctor;
 
 import com.doctorsoffice.schedule.*;
-import org.springframework.dao.DataIntegrityViolationException;
+import com.doctorsoffice.user.User;
+import com.doctorsoffice.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -14,10 +14,12 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
-    public DoctorService(DoctorRepository doctorRepository, ScheduleRepository scheduleRepository) {
+    public DoctorService(DoctorRepository doctorRepository, ScheduleRepository scheduleRepository, UserRepository userRepository) {
         this.doctorRepository = doctorRepository;
         this.scheduleRepository = scheduleRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -50,9 +52,11 @@ public class DoctorService {
     }
 
     @Transactional(readOnly = true)
-    public List<Schedule> getSchedules(Long doctorId) {
-        final Doctor doctor = get(doctorId);
-        return scheduleRepository.findAllByDoctor(doctor);
+    public List<Schedule> getSchedules(String username) {
+        final User user = userRepository.findByUsername(username)
+                .orElseThrow(NoSuchElementException::new);
+
+        return scheduleRepository.findAllByDoctor(user.getDoctor());
     }
 
     @Transactional(readOnly = true)
