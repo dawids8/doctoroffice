@@ -31,7 +31,7 @@ public class ScheduleController {
         }
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public List<ScheduleDto> update(@RequestBody UpdateScheduleRequest updateScheduleRequest) {
         try {
             List<Schedule> result = doctorService.update(updateScheduleRequest);
