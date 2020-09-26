@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class UpdateScheduleRequest {
 
-    private Long doctorId;
+    private String username;
     private List<ScheduleDto> schedules;
 
 }

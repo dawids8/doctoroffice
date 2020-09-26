@@ -24,7 +24,7 @@ public class DoctorService {
 
     @Transactional
     public List<Schedule> update(UpdateScheduleRequest updateScheduleRequests) {
-        final Doctor doctor = get(updateScheduleRequests.getDoctorId());
+        final Doctor doctor = get(updateScheduleRequests.getUsername());
         final List<Schedule> actualSchedules = doctor.getSchedules();
         final List<ScheduleDto> scheduleRequestsSchedules = updateScheduleRequests.getSchedules();
 
@@ -60,9 +60,11 @@ public class DoctorService {
     }
 
     @Transactional(readOnly = true)
-    public Doctor get(Long id) {
-        return doctorRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("There is no doctor with such id"));
+    public Doctor get(String username) {
+        final User user = userRepository.findByUsername(username)
+                .orElseThrow(NoSuchElementException::new);
+
+        return user.getDoctor();
     }
 
     @Transactional(readOnly = true)
@@ -73,5 +75,10 @@ public class DoctorService {
     @Transactional(readOnly = true)
     public List<Doctor> getDoctorsWithSpecifiedSpecialization(MedicalSpecialization medicalSpecialization) {
         return doctorRepository.findDoctorByMedicalSpecialization(medicalSpecialization);
+    }
+
+    public Doctor getById(Long id) {
+        return doctorRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("There is no doctor with such ID"));
     }
 }
