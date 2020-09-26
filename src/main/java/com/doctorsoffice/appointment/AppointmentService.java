@@ -35,14 +35,14 @@ public class AppointmentService {
         final LocalDateTime startDate = createAppointmentRequest.getStartDate();
         final boolean isFromPast = startDate.isBefore(LocalDateTime.now());
 
-        if(isFromPast) {
+        if (isFromPast) {
             throw new RuntimeException("There is no way to create appointment in past."); // ? sprawdzić
         }
 
         final LocalDateTime endDate = createAppointmentRequest.getEndDate();
         final boolean isBeforeStartDate = endDate.isBefore(LocalDateTime.now());
 
-        if(isBeforeStartDate) {
+        if (isBeforeStartDate) {
             throw new RuntimeException("There is no way to create appointment before start date."); // Utworzyć exception, zeby nie rzucac Runtime
         }
 
