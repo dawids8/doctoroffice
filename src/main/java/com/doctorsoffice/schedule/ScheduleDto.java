@@ -1,5 +1,6 @@
 package com.doctorsoffice.schedule;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalTime;
@@ -8,7 +9,9 @@ import java.time.LocalTime;
 public class ScheduleDto {
 
     private Long id;
+    @JsonFormat(pattern="HH:mm")
     private LocalTime start;
+    @JsonFormat(pattern="HH:mm")
     private LocalTime finish;
     private Long appointmentDuration;
     private Long intervalMinutes;
