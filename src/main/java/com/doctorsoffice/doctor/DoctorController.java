@@ -24,7 +24,7 @@ public class DoctorController {
     @GetMapping("/get")
     public DoctorDto get(@RequestParam Long id) {
         try {
-            final Doctor doctor = doctorService.get(id);
+            final Doctor doctor = doctorService.getById(id);
             return doctorMapper.toDto(doctor);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
