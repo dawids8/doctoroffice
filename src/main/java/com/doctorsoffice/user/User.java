@@ -66,10 +66,10 @@ public class User {
     @NotNull
     private UserRole userRole;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private Doctor doctor;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
     private Patient patient;
 
     public User() {
