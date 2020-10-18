@@ -22,6 +22,15 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
+    @PostMapping("/generateAppointments")
+    public void generateAppointments(@RequestBody GenerateAppointmentsRequest generateAppointmentsRequest) {
+        try {
+            this.appointmentService.generateAppointments(generateAppointmentsRequest);
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(e.getHttpStatus(), e.getMessage());
+        }
+    }
+
     @PostMapping("/create")
     public AppointmentDto create(@RequestBody CreateAppointmentRequest createAppointmentRequest) {
         try {
