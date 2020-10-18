@@ -1,16 +1,22 @@
 package com.doctorsoffice.appointment;
 
+import com.doctorsoffice.common.InputDataValidator;
 import com.doctorsoffice.doctor.Doctor;
 import com.doctorsoffice.doctor.DoctorRepository;
 import com.doctorsoffice.patient.Patient;
 import com.doctorsoffice.patient.PatientRepository;
+import com.doctorsoffice.schedule.Schedule;
+import com.doctorsoffice.schedule.ScheduleRepository;
 import com.doctorsoffice.user.User;
 import com.doctorsoffice.user.UserRepository;
 import com.doctorsoffice.validation.ValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,38 +27,65 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
+    private final ScheduleRepository scheduleRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository,
-                              PatientRepository patientRepository, UserRepository userRepository) {
+                              PatientRepository patientRepository, UserRepository userRepository, ScheduleRepository scheduleRepository) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.userRepository = userRepository;
+        this.scheduleRepository = scheduleRepository;
+    }
+
+    @Transactional
+    public void generateAppointments(GenerateAppointmentsRequest generateAppointmentsRequest) {
+        InputDataValidator.validateDates(generateAppointmentsRequest.getStartDate(), generateAppointmentsRequest.getEndDate());
+
+        final Doctor doctor = userRepository.findByUsername(generateAppointmentsRequest.getDoctorUsername())
+                .orElseThrow(() -> new NoSuchElementException("There is no user with such username"))
+                .getDoctor();
+
+        List<Schedule> doctorSchedule = scheduleRepository.findAllByDoctor(doctor);
+
+        int startDay = generateAppointmentsRequest.getStartDate().getDayOfYear();
+        int endDay = generateAppointmentsRequest.getEndDate().getDayOfYear();
+
+        for (int i = startDay; i <= endDay; i++) {
+            LocalDate day = LocalDate.ofYearDay(generateAppointmentsRequest.getStartDate().getYear(), i);
+            Schedule daySchedule = doctorSchedule.get(day.getDayOfWeek().getValue() - 1);
+
+            long workDuration = Duration.between(daySchedule.getStart(), daySchedule.getFinish()).toMinutes();
+            long appointmentDurationWithInterval = daySchedule.getAppointmentDuration() + daySchedule.getIntervalMinutes();
+            long numberOfAppointmentsInADay = workDuration/appointmentDurationWithInterval;
+
+            LocalTime appointmentStartTimeIndex = daySchedule.getStart();
+            for (int j = 0; j < numberOfAppointmentsInADay; j++) {
+
+                LocalDateTime startTime = LocalDateTime.of(day, appointmentStartTimeIndex);
+                appointmentStartTimeIndex = appointmentStartTimeIndex.plusMinutes(daySchedule.getAppointmentDuration());
+                LocalDateTime endTime = LocalDateTime.of(day, appointmentStartTimeIndex);
+
+                Appointment appointment = new Appointment(startTime, endTime, doctor, AppointmentStatus.AVAILABLE);
+
+                this.appointmentRepository.save(appointment);
+
+                appointmentStartTimeIndex = appointmentStartTimeIndex.plusMinutes(daySchedule.getIntervalMinutes());
+            }
+        }
     }
 
     @Transactional
     public Appointment create(CreateAppointmentRequest createAppointmentRequest) {
         final LocalDateTime startDate = createAppointmentRequest.getStartDate();
-        final boolean isFromPast = startDate.isBefore(LocalDateTime.now());
-
-        if (isFromPast) {
-            throw new RuntimeException("There is no way to create appointment in past."); // ? sprawdzić
-        }
-
         final LocalDateTime endDate = createAppointmentRequest.getEndDate();
-        final boolean isBeforeStartDate = endDate.isBefore(LocalDateTime.now());
-
-        if (isBeforeStartDate) {
-            throw new RuntimeException("There is no way to create appointment before start date."); // Utworzyć exception, zeby nie rzucac Runtime
-        }
+        InputDataValidator.validateDates(createAppointmentRequest.getStartDate(), createAppointmentRequest.getEndDate());
 
         final Long doctorId = createAppointmentRequest.getDoctorId();
         final Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new NoSuchElementException("There is no doctor with such id"));
 
-        final Appointment appointment = new Appointment(startDate, endDate, doctor, AppointmentStatus.AVAILABLE);
-
-        return appointmentRepository.save(appointment);
+        return appointmentRepository.save(new Appointment(startDate, endDate, doctor, AppointmentStatus.AVAILABLE));
     }
 
     @Transactional
@@ -148,10 +181,9 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public List<Appointment> getAllByDoctorUsername(String username) {
-        final User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new NoSuchElementException("User name not exist"));
-
-        final Doctor doctor = user.getDoctor();
+        final Doctor doctor = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User name not exist"))
+                .getDoctor();
 
         if (doctor == null) {
             throw new ValidationException("User is not a doctor");
@@ -161,13 +193,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Appointment> getAllByDoctorId(Long id) {
-        return appointmentRepository.findAllByDoctorId(id);
-    }
-
-    @Transactional(readOnly = true)
     public List<Appointment> getAllByPatientId(Long id) {
         return appointmentRepository.findAllByPatientId(id);
     }
-
 }
